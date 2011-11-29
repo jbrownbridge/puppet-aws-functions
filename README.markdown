@@ -9,12 +9,14 @@ The gem and aws credentials need only be installed on the master.
 Installation
 ------------
 
-These files should be placed in your puppet config tree in a module at lib/puppet/parser/functions
+The files in functions should be placed in your puppet config tree in a module at lib/puppet/parser/functions.
+The files in facter should be placed in lib/facter.
 
 ### Dependencies
 
 - fog gem
 - curl
+- facter ec2_meta_data lib
 
 ### Credentials
 

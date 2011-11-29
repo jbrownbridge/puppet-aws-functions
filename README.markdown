@@ -13,8 +13,8 @@ These files should be placed in your puppet config tree in a module at lib/puppe
 
 ### Dependencies
 
-fog gem (fog.io)
-curl
+- fog gem
+- curl
 
 ### Credentials
 

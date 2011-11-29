@@ -2,10 +2,14 @@
 README
 ======
 
+This is a repository of useful functions for integrating puppet with Amazon Web Services.
+These custom parser functions are executed on the puppet master during catalog compilation
+The gem and aws credentials need only be installed on the master.
+
 Installation
 ------------
 
-These files should be placed in you puppet tree in a module at lib/puppet/parser/functions
+These files should be placed in your puppet config tree in a module at lib/puppet/parser/functions
 
 ### Dependencies
 

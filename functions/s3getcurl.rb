@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'fog'
+require 'time'
 
 module Puppet::Parser::Functions
   newfunction(:s3getcurl, :type => :rvalue) do |args|
@@ -11,7 +12,7 @@ module Puppet::Parser::Functions
     Fog.credentials_path = '/etc/puppet/fog_cred'
     s3 = Fog::Storage.new(:provider => 'AWS')
     s3bucket = s3.directories.get(bucket)
-    url = s3bucket.files.get_https_url(key, expires)
+    url = s3bucket.files.get_https_url(key, Time.parse(DateTime.now.to_s).to_i + expires.to_i)
     heads = headers.map{|k,v| "-H '#{k}: #{v}'"}.join(' ')
     cmd = "curl #{heads} --create-dirs -s -f -o #{filename} '#{url}'"
     return cmd

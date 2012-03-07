@@ -3,6 +3,7 @@ require 'fog'
 
 module Puppet::Parser::Functions
   newfunction(:r53SetRecord) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
     # all dns names must end with a period
     params = {}
     params[:zone] = args[0]
@@ -20,7 +21,14 @@ module Puppet::Parser::Functions
     @zone = @dns.zones.find { |z| z.attributes[:domain] == params[:zone]  }
 
     #check to see if the record exists, if not create it
-    if not @record = @zone.records.find.each { |r| r.name == params[:name] }
+    #
+    # This is so rediculously complicated because amazon won't return
+    # more than 100 items
+    @record = @zone.records.all(:max_items =>'1', :name => params[:name]) {
+      |r| r.name == params[:name] }[0]
+
+    if not @record.name == params[:name]
+      function_notice(['Record does not exist. Creating it.'])
       @zone.records.create(
         :value => params[:value],
         :name  => params[:name],
@@ -30,6 +38,7 @@ module Puppet::Parser::Functions
 
       #check to see if the existing record is the same, if not destroy and create it
     elsif not @record.attributes[:value][0] == params[:value]
+      function_notice(['Record exists but differs. Recreating it.'])
       @record.destroy
       @zone.records.create(
         :value => params[:value],
